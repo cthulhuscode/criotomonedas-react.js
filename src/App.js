@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import axios from "axios";
 import img from "./cryptomonedas.png";
 
 // Components
 import Form from "./components/Form";
+import Quotation from "./components/Quotation";
+import Spinner from "./components/Spinner";
 
 const Container = styled.div`
   max-width: 900px;
@@ -37,17 +40,43 @@ const Heading = styled.h1`
 `;
 
 function App() {
+  // useState
   const [coin, setCoin] = useState("");
   const [cryptoCoin, setCryptocoin] = useState("");
+  const [result, setResult] = useState({});
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
-    // Avoid a first execution
-    if (cryptoCoin === "" || coin === "") {
-      return;
-    }
+    const getCryptocoinData = async () => {
+      // Avoid a first execution
+      if (cryptoCoin === "" || coin === "") {
+        return;
+      }
 
-    console.log("Cotizando...");
+      // Do the quotation
+      const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${cryptoCoin}&tsyms=${coin}`;
+      const result = await axios.get(url);
+
+      if (!result) {
+        console.log("Error retrieving the data");
+        return;
+      }
+
+      // Show spinner
+      setShowSpinner(true);
+      setTimeout(() => {
+        setShowSpinner(false);
+        setResult(result.data.DISPLAY[cryptoCoin][coin]);
+      }, 600);
+    };
+    getCryptocoinData();
   }, [coin, cryptoCoin]);
+
+  const component = showSpinner ? (
+    <Spinner showSpinner={showSpinner} setShowSpinner={setShowSpinner} />
+  ) : (
+    <Quotation result={result} />
+  );
 
   return (
     <Container>
@@ -57,6 +86,7 @@ function App() {
       <div>
         <Heading>Cotiza Criptomonedas al instante</Heading>
         <Form setCoin={setCoin} setCryptocoin={setCryptocoin} />
+        {component}
       </div>
     </Container>
   );

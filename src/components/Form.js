@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 // Custom Hook
 import useCoin from "../hooks/useCoin";
@@ -87,6 +88,11 @@ const Form = ({ setCoin, setCryptocoin }) => {
       <Button type="submit" value="Calcular" />
     </form>
   );
+};
+
+Form.propTypes = {
+  setCoin: PropTypes.func.isRequired,
+  setCryptocoin: PropTypes.func.isRequired,
 };
 
 export default Form;

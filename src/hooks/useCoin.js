@@ -30,14 +30,14 @@ const useCoin = (label, initialState, options) => {
   const SelectCoin = () => (
     <Fragment>
       <Label>{label}</Label>{" "}
-      <select onChange={(e) => setState(e.target.value)} value={state}>
+      <Select onChange={(e) => setState(e.target.value)} value={state}>
         <option value="">- Seleccione una moneda -</option>
         {options.map((option) => (
           <option key={option.code} value={option.code}>
             {option.name}
           </option>
         ))}
-      </select>
+      </Select>
     </Fragment>
   );
 
